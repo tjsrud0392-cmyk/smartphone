@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>9개의 점에 숨겨진 비밀</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#EDF5FB; --surface:#FFFFFF; --surface-2:#F6FAFD;
+  --ink:#13304F; --muted:#56708B; --line:#D2E2EE;
+  --blue:#2D68DE; --blue-strong:#1E4FB8; --blue-soft:#E2ECFF;
+  --mint:#1DB394; --mint-ink:#0B7461; --mint-soft:#D7F5EC;
+  --coral:#D9483D; --coral-soft:#FDE6E3;
+  --dot-off:#C4D3E0; --sun:#F5B83D;
+  --bar1:#7FB2F0; --bar2:#2D68DE; --bar5:#1DB394;
+  --display:"Jua","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#0E1A28; --surface:#15263A; --surface-2:#1A2E45;
+    --ink:#E4EEF8; --muted:#9BB2C8; --line:#2A4058;
+    --blue:#6F9CFF; --blue-strong:#9BBBFF; --blue-soft:#1C3357;
+    --mint:#3DD5B2; --mint-ink:#7EE7CF; --mint-soft:#143D38;
+    --coral:#FF8A7D; --coral-soft:#47231F;
+    --dot-off:#3A5069; --bar1:#5B86C4; --bar2:#6F9CFF; --bar5:#3DD5B2;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#0E1A28; --surface:#15263A; --surface-2:#1A2E45;
+  --ink:#E4EEF8; --muted:#9BB2C8; --line:#2A4058;
+  --blue:#6F9CFF; --blue-strong:#9BBBFF; --blue-soft:#1C3357;
+  --mint:#3DD5B2; --mint-ink:#7EE7CF; --mint-soft:#143D38;
+  --coral:#FF8A7D; --coral-soft:#47231F;
+  --dot-off:#3A5069; --bar1:#5B86C4; --bar2:#6F9CFF; --bar5:#3DD5B2;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 80px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* header */
+header.hero{padding:28px 0 22px}
+.hero .wrap{display:flex;align-items:center;gap:22px}
+.logo{flex:0 0 auto;width:84px;height:84px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,5vw,46px);line-height:1.15;margin:0;letter-spacing:-.01em}
+.hero p{margin:6px 0 0;color:var(--muted);font-size:clamp(16px,2.2vw,19px)}
+
+/* tabs */
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:6px;overflow-x:auto}
+.tab{flex:1 0 auto;min-height:60px;padding:10px 18px;border:0;background:none;font-family:var(--display);font-size:20px;color:var(--muted);border-bottom:4px solid transparent;white-space:nowrap}
+.tab small{display:inline-block;margin-right:8px;width:28px;height:28px;line-height:28px;border-radius:50%;background:var(--surface-2);font-size:16px;text-align:center}
+.tab[aria-selected="true"]{color:var(--blue-strong);border-bottom-color:var(--blue)}
+.tab[aria-selected="true"] small{background:var(--blue);color:#fff}
+
+main{padding:26px 0 10px}
+.panel[hidden]{display:none}
+.lead{font-size:18px;margin:0 0 18px;max-width:62ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px}
+.card + .card{margin-top:16px}
+h2{font-family:var(--display);font-weight:400;font-size:26px;margin:0 0 12px;line-height:1.25}
+h3{font-family:var(--display);font-weight:400;font-size:22px;margin:0 0 10px}
+
+/* buttons */
+.btn{min-height:52px;padding:10px 20px;border-radius:14px;border:2px solid var(--line);background:var(--surface);font-weight:700;font-size:17px;display:inline-flex;align-items:center;justify-content:center;gap:8px;touch-action:manipulation}
+.btn:hover{border-color:var(--blue)}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.primary:hover{background:var(--blue-strong);border-color:var(--blue-strong)}
+.btn.mint{background:var(--mint);border-color:var(--mint);color:#06372E}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px}
+
+/* tab1 */
+.maker{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px;align-items:start}
+.pad-card{display:flex;flex-direction:column;align-items:center;gap:16px}
+.pad{width:min(100%,460px);aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none;background:var(--surface-2);border-radius:28px;border:1px solid var(--line)}
+.pad .dot-hit{cursor:pointer}
+.pad text{font-family:var(--display);pointer-events:none}
+.path-show{font-family:var(--display);font-size:clamp(28px,5vw,40px);min-height:1.4em;text-align:center;letter-spacing:.02em}
+.path-show .ph{color:var(--dot-off)}
+.path-show .arrow{color:var(--mint);margin:0 4px}
+.count-pill{display:inline-block;padding:4px 14px;border-radius:999px;background:var(--blue-soft);color:var(--blue-strong);font-weight:700}
+.msg{border-radius:16px;padding:14px 16px;font-weight:500;margin-top:12px}
+.msg.info{background:var(--blue-soft);color:var(--ink)}
+.msg.ok{background:var(--mint-soft);color:var(--mint-ink)}
+.msg.bad{background:var(--coral-soft);color:var(--coral)}
+.msg strong{font-weight:700}
+.msg.big{font-size:19px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:15px;color:var(--muted);margin:4px 0 0}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.lg{width:16px;height:16px;border-radius:50%;display:inline-block}
+.lg.used{background:var(--blue)} .lg.can{background:var(--surface);border:3px solid var(--mint)} .lg.no{background:var(--surface);border:2px dashed var(--dot-off)}
+.reason-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+.reason-list li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:var(--surface-2)}
+.num{flex:0 0 auto;width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--display);font-size:18px}
+.num.can{border:3px solid var(--mint);color:var(--mint-ink)}
+.num.no{border:2px dashed var(--dot-off);color:var(--muted)}
+.fix-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fix-row select{min-height:52px;padding:8px 14px;border-radius:14px;border:2px solid var(--line);background:var(--surface);font-weight:700}
+.done-banner{display:flex;align-items:center;gap:12px;background:var(--mint);color:#06372E;border-radius:18px;padding:14px 18px;font-family:var(--display);font-size:22px}
+.done-banner svg{flex:0 0 auto}
+
+/* tab2 */
+.step{display:grid;grid-template-columns:auto 1fr;gap:16px}
+.step-no{font-family:var(--display);width:56px;height:56px;border-radius:18px;background:var(--blue);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;font-size:13px}
+.step-no b{font-size:24px;font-weight:400;margin-top:2px}
+.step.locked .step-no{background:var(--dot-off)}
+.step-body{min-width:0}
+.step-body > p{margin:0 0 12px}
+.start-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.choice{border:3px solid var(--line);background:var(--surface);border-radius:20px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--display);font-size:22px}
+.choice small{font-family:var(--body);font-size:15px;color:var(--muted)}
+.choice[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-soft)}
+.mini{display:block}
+.second-wrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.branch-btns{display:flex;flex-wrap:wrap;gap:10px}
+.branch-btn{min-height:56px;min-width:96px;padding:8px 14px;border-radius:16px;border:3px solid var(--line);background:var(--surface);font-family:var(--display);font-size:22px;position:relative}
+.branch-btn[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-soft)}
+.branch-btn .st{position:absolute;top:-9px;right:-9px;width:24px;height:24px;border-radius:50%;font-size:14px;line-height:24px;font-family:var(--body);font-weight:700;color:#fff}
+.st.ok{background:var(--mint)} .st.bad{background:var(--coral)}
+.note{font-size:15px;color:var(--muted);margin:10px 0 0}
+.calc-line{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:center;font-size:18px;margin-bottom:14px}
+.calc-line dt{color:var(--muted)} .calc-line dd{margin:0;font-weight:700}
+.answer-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.num-in{width:130px;min-height:56px;border-radius:14px;border:2px solid var(--line);background:var(--surface-2);font-family:var(--display);font-size:26px;text-align:center;padding:4px 8px}
+.num-in:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px var(--blue-soft)}
+.unit{font-weight:700}
+.third-list{display:grid;gap:12px;margin-top:6px}
+.third{border:2px solid var(--line);border-radius:18px;padding:14px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;background:var(--surface-2)}
+.third.ok{border-color:var(--mint)} .third.bad{border-color:var(--coral)}
+.third-label{font-family:var(--display);font-size:24px}
+.third-body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.third .answer-row .num-in{width:96px;min-height:50px;font-size:22px}
+.third .btn{min-height:50px}
+.fourth-chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:4px 10px;border-radius:999px;background:var(--mint-soft);color:var(--mint-ink);font-family:var(--display);font-size:17px}
+.fb{font-weight:700}
+.fb.ok{color:var(--mint-ink)} .fb.bad{color:var(--coral)}
+.progress-chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
+.pchip{border:2px solid var(--line);border-radius:999px;padding:4px 12px;font-family:var(--display);font-size:18px;background:var(--surface)}
+.pchip.ok{border-color:var(--mint);background:var(--mint-soft);color:var(--mint-ink)}
+.pchip.bad{border-color:var(--coral);color:var(--coral)}
+
+/* tab3 */
+.inputs3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.in3{border:2px solid var(--line);border-radius:18px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--surface-2)}
+.in3 label{font-family:var(--display);font-size:21px;text-align:center}
+.in3 label small{display:block;font-family:var(--body);font-size:14px;color:var(--muted)}
+.in3 .num-in{width:100%;max-width:160px}
+.result-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px;align-items:start}
+.table-scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:16px}
+th,td{padding:10px 10px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+th{font-weight:700;color:var(--muted);font-size:14px;background:var(--surface-2)}
+td.big{font-family:var(--display);font-size:22px}
+.yes{color:var(--mint-ink);font-weight:700} .no{color:var(--coral);font-weight:700}
+.bars{display:grid;gap:16px}
+.bar-row{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:center}
+.bar-label{font-family:var(--display);font-size:20px;text-align:right;line-height:1.1}
+.bar-label small{display:block;font-family:var(--body);font-size:13px;color:var(--muted)}
+.bar-track{position:relative;height:54px;background:var(--surface-2);border-radius:12px}
+.bar{position:absolute;inset:0 auto 0 0;border-radius:12px;display:flex;align-items:center;justify-content:flex-end;padding-right:12px;font-family:var(--display);font-size:24px;color:#fff;width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.bar.b1{background:var(--bar1);color:#0B2747} .bar.b2{background:var(--bar2)} .bar.b5{background:var(--bar5);color:#06372E}
+.my-mark{position:absolute;top:-6px;bottom:-6px;width:4px;background:var(--sun);border-radius:2px}
+.axis{display:grid;grid-template-columns:72px 1fr;gap:10px;font-size:13px;color:var(--muted)}
+.axis-ticks{position:relative;height:18px}
+.axis-ticks span{position:absolute;transform:translateX(-50%)}
+.check-sum{font-size:16px;margin-top:14px;padding:14px 16px;border-radius:16px;background:var(--surface-2);border:1px dashed var(--line)}
+.check-sum b{font-family:var(--display);font-weight:400;font-size:20px}
+.question{margin-top:16px}
+.q-text{font-family:var(--display);font-size:24px;line-height:1.35;margin:0 0 14px}
+.q-btns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.q-btn{min-height:64px;border-radius:18px;border:3px solid var(--line);background:var(--surface);font-family:var(--display);font-size:22px}
+.q-btn.right{border-color:var(--mint);background:var(--mint-soft);color:var(--mint-ink)}
+.q-btn.wrong{border-color:var(--coral);background:var(--coral-soft);color:var(--coral)}
+.caution{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:14px 16px;border-radius:16px;border:2px solid var(--sun);background:var(--surface)}
+.caution b{color:var(--ink)}
+
+/* records */
+section.records{padding:10px 0 40px}
+.rec-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.rec-head h2{margin:0}
+.rec-table td{font-size:15px}
+.rec-table td.note-cell{min-width:240px}
+.rec-table input{width:100%;min-height:42px;border:2px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--surface-2);font-size:15px}
+.lock{color:var(--muted);font-size:14px}
+.empty{color:var(--muted);text-align:center;padding:24px 10px}
+footer{padding:0 0 30px;color:var(--muted);font-size:14px;text-align:center}
+
+@media (max-width: 860px){
+  .maker,.result-grid{grid-template-columns:1fr}
+}
+@media (max-width: 560px){
+  .start-choices,.q-btns,.inputs3{grid-template-columns:1fr}
+  .step{grid-template-columns:1fr}
+  .step-no{width:auto;height:auto;flex-direction:row;gap:6px;padding:6px 12px;justify-self:start;border-radius:12px;font-size:14px}
+  .step-no b{font-size:18px;margin:0}
+  .tab{font-size:17px;padding:10px 10px}
+  .tab small{display:none}
+  .hero .wrap{gap:14px}.logo{width:64px;height:64px}
+}
+@media (prefers-reduced-motion: reduce){ .bar{transition:none} *{scroll-behavior:auto} }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <svg class="logo" viewBox="0 0 84 84" aria-hidden="true">
+      <rect x="1" y="1" width="82" height="82" rx="22" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/>
+      <polyline points="18,18 42,42 66,66 66,42" fill="none" stroke="var(--mint)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <g fill="var(--dot-off)"><circle cx="42" cy="18" r="5"/><circle cx="66" cy="18" r="5"/><circle cx="18" cy="42" r="5"/><circle cx="18" cy="66" r="5"/><circle cx="42" cy="66" r="5"/></g>
+      <g fill="var(--blue)"><circle cx="18" cy="18" r="7"/><circle cx="42" cy="42" r="7"/><circle cx="66" cy="66" r="7"/><circle cx="66" cy="42" r="7"/></g>
+    </svg>
+    <div>
+      <h1>「9개의 점에 숨겨진 비밀」</h1>
+      <p>시작점이 알려지면 패턴의 후보는 얼마나 남을까?</p>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="탐구 단계">
+  <div class="wrap" role="tablist">
+    <button class="tab" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="true"><small>1</small>패턴 직접 만들기</button>
+    <button class="tab" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false"><small>2</small>나뭇가지 계산 검증</button>
+    <button class="tab" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false"><small>3</small>시작점별 결과 비교</button>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section class="panel" id="panel-1" role="tabpanel" aria-labelledby="tab-1"></section>
+  <section class="panel" id="panel-2" role="tabpanel" aria-labelledby="tab-2" hidden></section>
+  <section class="panel" id="panel-3" role="tabpanel" aria-labelledby="tab-3" hidden></section>
+</main>
+
+<section class="records wrap" aria-labelledby="rec-title">
+  <div class="card">
+    <div class="rec-head">
+      <h2 id="rec-title">탐구 기록</h2>
+      <div class="btn-row">
+        <button class="btn primary" id="csv-btn" type="button">CSV 파일로 저장</button>
+        <button class="btn" id="rec-clear" type="button">기록 모두 지우기</button>
+      </div>
+    </div>
+    <p class="note" style="margin:0 0 10px">검증 버튼을 누를 때마다 자동으로 기록돼요. ‘수정한 내용’ 칸에 무엇을 고쳤는지 적어 두세요. 이름 같은 개인정보는 기록하지 않아요.</p>
+    <div id="rec-msg"></div>
+    <div class="table-scroll" id="rec-table"></div>
+  </div>
+</section>
+<footer>3×3 격자에서 서로 다른 점 4개를 잇는 패턴만 다룹니다.</footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ===================== 1. 패턴 규칙과 DFS ===================== */
+const POS = n => [(n-1)%3, Math.floor((n-1)/3)];      // [열, 행]
+const gcd = (a,b) => b ? gcd(b, a%b) : a;
+
+// a에서 b로 가는 선분이 정확히 지나는 격자점들
+function between(a,b){
+  const [ax,ay]=POS(a),[bx,by]=POS(b);
+  const dx=bx-ax, dy=by-ay, g=gcd(Math.abs(dx),Math.abs(dy));
+  const out=[];
+  for(let k=1;k<g;k++) out.push((ay+dy/g*k)*3 + (ax+dx/g*k) + 1);
+  return out;
+}
+
+// path 다음에 to로 갈 수 있는지와 그 이유
+function judge(path,to){
+  if(path.length===0) return {ok:true, why:"시작점으로 고를 수 있어요."};
+  if(path.length>=4) return {ok:false, why:"이미 4개의 점을 모두 연결했어요."};
+  if(path.includes(to)) return {ok:false, used:true, why:`${to}번은 이미 사용한 점이에요. 같은 점은 두 번 쓸 수 없어요.`};
+  const from=path[path.length-1];
+  const mids=between(from,to);
+  const unvisited=mids.filter(m=>!path.includes(m));
+  if(unvisited.length) return {ok:false, why:`${from}번에서 ${to}번으로 가는 선은 ${unvisited[0]}번 점을 지나요. ${unvisited[0]}번을 아직 방문하지 않았으니 건너뛸 수 없어요.`};
+  if(mids.length) return {ok:true, jump:true, why:`${mids[0]}번을 이미 지나왔으니 건너뛰어 갈 수 있어요.`};
+  return {ok:true, why:"바로 이어서 갈 수 있어요."};
+}
+
+// DFS(백트래킹)로 모든 4점 패턴을 실제로 만든다
+function generate(prefix, L){
+  const out=[], p=prefix.slice();
+  (function dfs(){
+    if(p.length===L){ out.push(p.slice()); return; }
+    for(let n=1;n<=9;n++){
+      if(judge(p,n).ok){ p.push(n); dfs(); p.pop(); }
+    }
+  })();
+  return out;
+}
+const ALL = [];
+for(let s=1;s<=9;s++) ALL.push(...generate([s],4));
+const countFrom = prefix => ALL.filter(pt=>prefix.every((v,i)=>pt[i]===v)).length;
+const nextPoints = prefix => { const r=[]; for(let n=1;n<=9;n++) if(judge(prefix,n).ok) r.push(n); return r; };
+
+// 제한 없는 경우(9×8×7×6)도 DFS로 직접 센다
+function countFree(){ let c=0; const p=[]; (function f(){ if(p.length===4){c++;return;} for(let n=1;n<=9;n++) if(!p.includes(n)){p.push(n);f();p.pop();} })(); return c; }
+const FREE = countFree();
+
+// 자체 검사 (화면에는 검증 후에만 결과가 나옴)
+const SELFTEST = (function(){
+  const c=s=>countFrom([s]);
+  const checks=[
+    c(1)===154, c(3)===154, c(7)===154, c(9)===154,
+    c(2)===188, c(4)===188, c(6)===188, c(8)===188,
+    c(5)===256, ALL.length===1624, FREE===3024,
+    !judge([1],3).ok, judge([1,2],3).ok, !judge([1],9).ok, judge([1,5],9).ok
+  ];
+  const pass=checks.every(Boolean);
+  if(!pass) console.error("패턴 규칙 자체 검사 실패", checks);
+  return pass;
+})();
+
+/* ===================== 2. 공통 도구 ===================== */
+const $ = (s,el=document)=>el.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const arrow = arr => arr.join("→");
+const PLACE = {1:"모서리",2:"변의 가운데",5:"중앙"};
+const xy = n => { const [c,r]=POS(n); return [50+c*100, 50+r*100]; };
+function parseNum(v){
+  const t=String(v).trim();
+  if(!/^\d+$/.test(t)) return null;
+  return parseInt(t,10);
+}
+
+// 작은 격자 그림
+function miniGrid({path=[], can=[], no=[], size=110}={}){
+  let s=`<svg class="mini" viewBox="0 0 300 300" width="${size}" height="${size}" aria-hidden="true">`;
+  s+=`<rect x="2" y="2" width="296" height="296" rx="40" fill="var(--surface-2)" stroke="var(--line)" stroke-width="4"/>`;
+  if(path.length>1) s+=`<polyline points="${path.map(n=>xy(n).join(",")).join(" ")}" fill="none" stroke="var(--blue)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>`;
+  for(let n=1;n<=9;n++){
+    const [x,y]=xy(n), i=path.indexOf(n);
+    if(i>=0){ s+=`<circle cx="${x}" cy="${y}" r="34" fill="var(--blue)"/><text x="${x}" y="${y+14}" text-anchor="middle" font-size="40" font-family="Jua,sans-serif" fill="#fff">${n}</text>`; }
+    else if(can.includes(n)){ s+=`<circle cx="${x}" cy="${y}" r="30" fill="var(--surface)" stroke="var(--mint)" stroke-width="10"/><text x="${x}" y="${y+13}" text-anchor="middle" font-size="36" font-family="Jua,sans-serif" fill="var(--mint-ink)">${n}</text>`; }
+    else if(no.includes(n)){ s+=`<circle cx="${x}" cy="${y}" r="26" fill="none" stroke="var(--dot-off)" stroke-width="5" stroke-dasharray="10 8"/><text x="${x}" y="${y+12}" text-anchor="middle" font-size="32" font-family="Jua,sans-serif" fill="var(--dot-off)">${n}</text>`; }
+    else { s+=`<circle cx="${x}" cy="${y}" r="14" fill="var(--dot-off)"/>`; }
+  }
+  return s+`</svg>`;
+}
+
+/* ===================== 3. 탐구 기록 ===================== */
+const STORE_KEY="nine-dots-records-v1";
+let records=[];
+let unlocked=new Set();     // 학생이 맞혔거나 공개된 대상만 실제 값을 기록표에 보여 줌
+try{
+  const raw=localStorage.getItem(STORE_KEY);
+  if(raw){ const d=JSON.parse(raw); records=Array.isArray(d.records)?d.records:[]; unlocked=new Set(Array.isArray(d.unlocked)?d.unlocked:[]); }
+}catch(e){ records=[]; }
+function persist(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify({records, unlocked:[...unlocked]})); }catch(e){} }
+
+function addRecord({key,start,target,mine,actual,ok}){
+  if(ok) unlocked.add(key);
+  const now=new Date();
+  const time=`${now.getMonth()+1}/${now.getDate()} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+  records.push({id:Date.now()+"-"+Math.random().toString(36).slice(2,6), time, key, start, target, mine, actual, ok, note:""});
+  persist(); renderRecords();
+}
+const shownActual = r => unlocked.has(r.key) ? String(r.actual) : null;
+
+function renderRecords(){
+  const box=$("#rec-table");
+  if(!records.length){ box.innerHTML=`<p class="empty">아직 기록이 없어요. 탭 2나 탭 3에서 검증하기를 눌러 보세요.</p>`; return; }
+  let h=`<table class="rec-table"><thead><tr><th>번호</th><th>시간</th><th>시작점</th><th>확인한 가지</th><th>직접 계산한 수</th><th>웹앱에서 확인한 수</th><th>일치</th><th>수정한 내용</th></tr></thead><tbody>`;
+  records.forEach((r,i)=>{
+    const a=shownActual(r);
+    h+=`<tr><td>${i+1}</td><td>${esc(r.time)}</td><td>${r.start}번</td><td>${esc(r.target)}</td><td class="big">${r.mine}</td>`+
+       `<td class="big">${a!==null?a:'<span class="lock">아직 비공개</span>'}</td>`+
+       `<td class="${r.ok?"yes":"no"}">${r.ok?"일치":"불일치"}</td>`+
+       `<td class="note-cell"><input type="text" data-note="${r.id}" value="${esc(r.note)}" placeholder="예: 1→2→5에서 9번을 빠뜨렸어요" aria-label="${i+1}번 기록의 수정한 내용"></td></tr>`;
+  });
+  box.innerHTML=h+`</tbody></table>`;
+}
+$("#rec-table").addEventListener("input",e=>{
+  const id=e.target.dataset.note; if(!id) return;
+  const r=records.find(x=>x.id===id); if(r){ r.note=e.target.value; persist(); }
+});
+$("#rec-clear").addEventListener("click",()=>{
+  if(!records.length) return;
+  if(confirm("탐구 기록을 모두 지울까요? 지운 기록은 되돌릴 수 없어요.")){ records=[]; persist(); renderRecords(); showRecMsg("기록을 모두 지웠어요.","info"); }
+});
+function showRecMsg(t,kind){ $("#rec-msg").innerHTML=`<div class="msg ${kind}" style="margin:0 0 12px">${esc(t)}</div>`; }
+
+let downloads=null;   // GitHub Pages에서는 브라우저 기본 다운로드를 사용
+function csvCell(v){ const s=String(v??""); return /[",\n\r]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s; }
+$("#csv-btn").addEventListener("click",async()=>{
+  if(!records.length){ showRecMsg("저장할 기록이 없어요. 먼저 검증하기를 눌러 기록을 만들어 보세요.","bad"); return; }
+  const rows=[["번호","시간","시작점","확인한 가지","직접 계산한 패턴 수","웹앱에서 확인한 패턴 수","일치 여부","수정한 내용"]];
+  records.forEach((r,i)=>{ const a=shownActual(r); rows.push([i+1,r.time,r.start+"번",r.target,r.mine,a!==null?a:"아직 비공개",r.ok?"일치":"불일치",r.note]); });
+  const csv="\uFEFF"+rows.map(r=>r.map(csvCell).join(",")).join("\r\n");
+  const name="9개의점_탐구기록.csv";
+  if(downloads){
+    try{ await downloads.save({filename:name, data:csv}); showRecMsg("CSV 파일을 저장했어요.","ok"); }
+    catch(err){ showRecMsg(err && err.code==="declined" ? "저장을 취소했어요." : "이 화면에서는 파일을 저장할 수 없어요. 잠시 후 다시 눌러 보세요.","bad"); }
+    return;
+  }
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob), a=document.createElement("a");
+  a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+  showRecMsg("CSV 파일을 저장했어요.","ok");
+});
+
+/* ===================== 4. 탭 전환 ===================== */
+const tabs=[...document.querySelectorAll(".tab")];
+function selectTab(i){
+  tabs.forEach((t,k)=>{ t.setAttribute("aria-selected", k===i?"true":"false"); t.tabIndex = k===i?0:-1; $("#panel-"+(k+1)).hidden = k!==i; });
+  if(i===2) renderT3();
+}
+tabs.forEach((t,i)=>{
+  t.addEventListener("click",()=>selectTab(i));
+  t.addEventListener("keydown",e=>{ if(e.key==="ArrowRight"||e.key==="ArrowLeft"){ const j=(i+(e.key==="ArrowRight"?1:2))%3; selectTab(j); tabs[j].focus(); } });
+});
+
+/* ===================== 5. 탭 1: 패턴 직접 만들기 ===================== */
+const t1={path:[], fixed:0, msg:null, drag:false, pointer:null};
+const P1=$("#panel-1");
+P1.innerHTML=`
+  <p class="lead">점을 손가락으로 쭉 이어 그리거나, 하나씩 눌러서 4개의 점을 연결해 보세요. 테두리가 민트색인 점으로만 갈 수 있어요.</p>
+  <div class="maker">
+    <div class="card pad-card">
+      <div class="path-show" id="t1-path" aria-live="polite"></div>
+      <svg class="pad" id="pad" viewBox="0 0 300 300" role="group" aria-label="3×3 점 격자"></svg>
+      <div class="legend"><span><i class="lg used"></i>연결한 점</span><span><i class="lg can"></i>갈 수 있는 점</span><span><i class="lg no"></i>갈 수 없는 점</span></div>
+      <div class="btn-row" style="justify-content:center">
+        <button class="btn" id="t1-undo" type="button">한 단계 되돌리기</button>
+        <button class="btn primary" id="t1-reset" type="button">처음부터 다시 만들기</button>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>시작점 고정</h3>
+        <div class="fix-row">
+          <label for="t1-fix">시작점</label>
+          <select id="t1-fix">
+            <option value="0">고정하지 않기</option>
+            ${[1,2,3,4,5,6,7,8,9].map(n=>`<option value="${n}">${n}번에서 시작</option>`).join("")}
+          </select>
+        </div>
+        <p class="note">시작점을 고정하면 되돌리기와 다시 만들기를 해도 시작점은 그대로 남아요.</p>
+      </div>
+      <div class="card" id="t1-status"></div>
+    </div>
+  </div>`;
+const pad=$("#pad");
+
+function renderPad(){
+  const p=t1.path, done=p.length===4;
+  let s=`<g id="pad-lines">`;
+  if(p.length>1) s+=`<polyline points="${p.map(n=>xy(n).join(",")).join(" ")}" fill="none" stroke="var(--blue)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity=".5"/>`;
+  if(t1.drag && t1.pointer && p.length && !done){ const [x,y]=xy(p[p.length-1]); s+=`<line x1="${x}" y1="${y}" x2="${t1.pointer[0]}" y2="${t1.pointer[1]}" stroke="var(--mint)" stroke-width="8" stroke-linecap="round" stroke-dasharray="2 14"/>`; }
+  s+=`</g>`;
+  for(let n=1;n<=9;n++){
+    const [x,y]=xy(n), i=p.indexOf(n), j=judge(p,n);
+    let body;
+    if(i>=0){
+      const last=i===p.length-1;
+      body=`<circle cx="${x}" cy="${y}" r="${last?30:26}" fill="var(--blue)" ${last&&!done?'stroke="var(--blue-soft)" stroke-width="10"':''}/>
+            <text x="${x}" y="${y+9}" text-anchor="middle" font-size="26" fill="#fff">${n}</text>
+            <circle cx="${x+24}" cy="${y-24}" r="13" fill="var(--sun)"/><text x="${x+24}" y="${y-19}" text-anchor="middle" font-size="15" fill="#3A2A00">${i+1}</text>`;
+    } else if(!done && j.ok){
+      body=`<circle cx="${x}" cy="${y}" r="24" fill="var(--surface)" stroke="var(--mint)" stroke-width="6"/>
+            <text x="${x}" y="${y+8}" text-anchor="middle" font-size="22" fill="var(--mint-ink)">${n}</text>`;
+    } else {
+      body=`<circle cx="${x}" cy="${y}" r="20" fill="none" stroke="var(--dot-off)" stroke-width="3" stroke-dasharray="6 5"/>
+            <text x="${x}" y="${y+8}" text-anchor="middle" font-size="20" fill="var(--dot-off)">${n}</text>`;
+    }
+    s+=`<g class="dot-hit" data-n="${n}" tabindex="0" role="button" aria-label="${n}번 점${i>=0?" (연결함)":""}"><circle cx="${x}" cy="${y}" r="44" fill="transparent"/>${body}</g>`;
+  }
+  pad.innerHTML=s;
+}
+function renderT1(){
+  renderPad();
+  const p=t1.path;
+  const slots=[0,1,2,3].map(i=>p[i]?`<span>${p[i]}</span>`:`<span class="ph">○</span>`);
+  $("#t1-path").innerHTML=slots.join(`<span class="arrow">→</span>`);
+  const st=$("#t1-status");
+  let h="";
+  if(p.length===4){
+    h+=`<div class="done-banner"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#fff"/><path d="M9 17.5l5.5 5.5L25 12" fill="none" stroke="var(--mint)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>완성! ${arrow(p)} 패턴을 만들었어요.</div>
+        <p class="note">다른 패턴을 만들려면 되돌리기나 다시 만들기를 눌러요.</p>`;
+  } else {
+    h+=`<h3>지금 상태 <span class="count-pill">${p.length} / 4개</span></h3>`;
+    if(!p.length) h+=`<p style="margin:0">아무 점이나 골라서 시작해 보세요.</p>`;
+    else{
+      const can=[],no=[];
+      for(let n=1;n<=9;n++){ if(p.includes(n)) continue; const j=judge(p,n); (j.ok?can:no).push([n,j]); }
+      h+=`<p style="margin:0 0 4px">${p[p.length-1]}번 다음에 갈 수 있는 점과 갈 수 없는 점이에요.</p><ul class="reason-list">`;
+      can.forEach(([n,j])=>h+=`<li><span class="num can">${n}</span><span>${esc(j.why)}</span></li>`);
+      no.forEach(([n,j])=>h+=`<li><span class="num no">${n}</span><span>${esc(j.why)}</span></li>`);
+      h+=`</ul>`;
+    }
+  }
+  if(t1.msg) h+=`<div class="msg ${t1.msg.kind}" role="status">${esc(t1.msg.text)}</div>`;
+  st.innerHTML=h;
+  $("#t1-undo").disabled = p.length <= (t1.fixed?1:0);
+}
+function tryAdd(n, quiet){
+  const p=t1.path;
+  if(p.length===4){ if(!quiet) t1.msg={kind:"info",text:"4개의 점을 모두 연결했어요. 되돌리기나 다시 만들기를 눌러 보세요."}; renderT1(); return; }
+  if(p.length && p[p.length-1]===n) return;
+  const j=judge(p,n);
+  if(j.ok){ p.push(n); t1.msg = j.jump ? {kind:"ok",text:`${n}번 연결! ${j.why}`} : null; renderT1(); }
+  else { if(quiet && j.used) return; t1.msg={kind:"bad",text:j.why}; renderT1(); }
+}
+function hitAt(e){
+  const r=pad.getBoundingClientRect();
+  const x=(e.clientX-r.left)/r.width*300, y=(e.clientY-r.top)/r.height*300;
+  t1.pointer=[x,y];
+  for(let n=1;n<=9;n++){ const [cx,cy]=xy(n); if(Math.hypot(cx-x,cy-y)<34) return n; }
+  return 0;
+}
+pad.addEventListener("pointerdown",e=>{
+  e.preventDefault();
+  try{ pad.setPointerCapture(e.pointerId); }catch(_){}
+  t1.drag=true;
+  const n=hitAt(e); if(n) tryAdd(n,false); else renderPad();
+});
+pad.addEventListener("pointermove",e=>{
+  if(!t1.drag) return;
+  const n=hitAt(e);
+  if(n && !t1.path.includes(n)) tryAdd(n,true); else renderPad();
+});
+const endDrag=()=>{ if(t1.drag){ t1.drag=false; t1.pointer=null; renderPad(); } };
+pad.addEventListener("pointerup",endDrag);
+pad.addEventListener("pointercancel",endDrag);
+pad.addEventListener("keydown",e=>{
+  const g=e.target.closest("[data-n]");
+  if(g && (e.key==="Enter"||e.key===" ")){ e.preventDefault(); const n=+g.dataset.n; tryAdd(n,false); const el=pad.querySelector(`[data-n="${n}"]`); if(el) el.focus(); }
+});
+$("#t1-undo").addEventListener("click",()=>{ if(t1.path.length>(t1.fixed?1:0)) t1.path.pop(); t1.msg=null; renderT1(); });
+$("#t1-reset").addEventListener("click",()=>{ t1.path = t1.fixed?[t1.fixed]:[]; t1.msg=null; renderT1(); });
+$("#t1-fix").addEventListener("change",e=>{
+  t1.fixed=+e.target.value;
+  t1.path = t1.fixed?[t1.fixed]:[];
+  t1.msg = t1.fixed ? {kind:"info",text:`시작점을 ${t1.fixed}번으로 고정했어요.`} : null;
+  renderT1();
+});
+renderT1();
+
+/* ===================== 6. 탭 2: 나뭇가지 계산 검증 ===================== */
+const t2={start:0, second:0, showThird:{}, inputs:{}, res:{}};
+// res 키: "b:1-2"(두 번째 점 가지), "c:1-2-3"(세 번째 점 가지), "s:1"(시작점 전체)
+const P2=$("#panel-2");
+const k=(t,arr)=>t+":"+arr.join("-");
+function fbBox(r, okText, badText){
+  if(!r) return "";
+  return `<div class="msg big ${r.ok?"ok":"bad"}" role="status">${r.ok?okText:badText}</div>`;
+}
+function renderT2(){
+  const s=t2.start, b=t2.second;
+  let h=`<p class="lead">종이에 그린 나뭇가지 그림과 비교해요. 정답은 검증하기 버튼을 누른 뒤에만 확인할 수 있어요.</p>`;
+
+  // STEP 1
+  h+=`<div class="card step"><div class="step-no">STEP<b>1</b></div><div class="step-body"><h2>시작점 선택</h2>
+      <div class="start-choices">${[1,2,5].map(n=>`<button type="button" class="choice" data-start="${n}" aria-pressed="${s===n}">${miniGrid({path:[n],size:84})}${n}번<small>${PLACE[n]}</small></button>`).join("")}</div></div></div>`;
+
+  // STEP 2
+  if(s){
+    const nexts=nextPoints([s]);
+    const blocked=[1,2,3,4,5,6,7,8,9].filter(n=>n!==s && !nexts.includes(n));
+    h+=`<div class="card step"><div class="step-no">STEP<b>2</b></div><div class="step-body"><h2>두 번째 점 선택</h2>
+        <div class="second-wrap">${miniGrid({path:[s],can:nexts,no:blocked,size:130})}
+        <div><p style="margin:0 0 10px">${s}번에서 바로 갈 수 있는 점은 민트색 점 ${nexts.length}개예요. 검증할 가지를 골라요.</p>
+        <div class="branch-btns">${nexts.map(n=>{ const r=t2.res[k("b",[s,n])]; return `<button type="button" class="branch-btn" data-second="${n}" aria-pressed="${b===n}">${s}→${n}${r?`<span class="st ${r.ok?"ok":"bad"}" aria-label="${r.ok?"맞음":"다름"}">${r.ok?"✓":"!"}</span>`:""}</button>`; }).join("")}</div></div></div>
+        ${blocked.length?`<p class="note">${blocked.map(n=>`${n}번`).join(", ")}은(는) 아직 방문하지 않은 중간 점을 건너뛰어야 해서 두 번째 점이 될 수 없어요.</p>`:""}
+        </div></div>`;
+  }
+
+  // STEP 3 & 4
+  if(s && b){
+    const key=k("b",[s,b]), r=t2.res[key];
+    h+=`<div class="card step"><div class="step-no">STEP<b>3</b></div><div class="step-body"><h2>직접 계산한 패턴 수 입력</h2>
+        <dl class="calc-line"><dt>시작점</dt><dd>${s}번</dd><dt>두 번째 점</dt><dd>${b}번 (${s}→${b})</dd></dl>
+        <div class="answer-row"><label for="in-${key}">내가 계산한 패턴 수</label>
+        <input class="num-in" id="in-${key}" data-in="${key}" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" value="${esc(t2.inputs[key]??"")}">
+        <span class="unit">가지</span>
+        <button type="button" class="btn primary" data-verify="${key}">검증하기</button></div>
+        <div id="err-${key}"></div>
+        ${fbBox(r,"정확해요! 나뭇가지를 빠짐없이 계산했어요.","계산한 수가 달라요. 세 번째 점으로 나누어 다시 확인해 보세요.")}
+        ${r && r.ok && !t2.showThird[key] ? `<div class="btn-row" style="margin-top:12px"><button type="button" class="btn" data-show-third="${key}">세 번째 점별로도 확인하기</button></div>`:""}
+        </div></div>`;
+
+    if(r && (!r.ok || t2.showThird[key])){
+      const thirds=nextPoints([s,b]);
+      const allOk=thirds.every(c=>{const x=t2.res[k("c",[s,b,c])]; return x&&x.ok;});
+      h+=`<div class="card step"><div class="step-no">STEP<b>4</b></div><div class="step-body"><h2>세 번째 점까지 세부 검증</h2>
+          <p>${s}→${b} 다음에 갈 수 있는 세 번째 점은 ${thirds.length}개예요. 각 가지에서 내가 센 <b>네 번째 점의 개수</b>를 입력하세요.</p>
+          <div class="third-list">`;
+      thirds.forEach(c=>{
+        const ck=k("c",[s,b,c]), cr=t2.res[ck];
+        const fourths=cr?nextPoints([s,b,c]):[];
+        let hint="";
+        if(cr && !cr.ok) hint = cr.mine>cr.actual ? "실제보다 많이 셌어요. 이미 쓴 점이나 건너뛸 수 없는 점을 세지 않았는지 확인해요." : "실제보다 적게 셌어요. 빠뜨린 점이 없는지, 이미 방문한 점을 건너뛰어 갈 수 있는 경우를 확인해요.";
+        h+=`<div class="third ${cr?(cr.ok?"ok":"bad"):""}">
+              ${miniGrid({path:[s,b,c],can:fourths,size:96})}
+              <div class="third-body">
+                <div class="third-label">${s}→${b}→${c}</div>
+                <div class="answer-row">
+                  <label for="in-${ck}" class="note" style="margin:0">네 번째 점</label>
+                  <input class="num-in" id="in-${ck}" data-in="${ck}" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" value="${esc(t2.inputs[ck]??"")}" aria-label="${s}→${b}→${c} 다음 네 번째 점의 개수">
+                  <span class="unit">개</span>
+                  <button type="button" class="btn primary" data-verify="${ck}">검증하기</button>
+                </div>
+                <div id="err-${ck}"></div>
+                ${cr?`<div class="fb ${cr.ok?"ok":"bad"}">${cr.ok?"정확해요!":"달라요."} ${esc(hint)}</div>
+                     <div class="note" style="margin:0">가능한 네 번째 점: ${fourths.length}개</div>
+                     <div class="fourth-chips">${fourths.map(d=>`<span class="chip">${s}→${b}→${c}→${d}</span>`).join("")}</div>`:""}
+              </div></div>`;
+      });
+      h+=`</div>${allOk?`<div class="msg ok">세 번째 점별 개수를 모두 맞혔어요. 이 수들을 더해서 STEP 3에 다시 입력해 보세요.</div>`:""}</div></div>`;
+    }
+  }
+
+  // STEP 5
+  if(s){
+    const nexts=nextPoints([s]);
+    const done=nexts.filter(n=>{const r=t2.res[k("b",[s,n])]; return r&&r.ok;}).length;
+    const key=k("s",[s]), r=t2.res[key];
+    h+=`<div class="card step"><div class="step-no">STEP<b>5</b></div><div class="step-body"><h2>시작점 전체 검증</h2>
+        <p>두 번째 점별 계산을 마쳤다면, ${s}번에서 시작하는 패턴의 전체 개수를 입력하세요.</p>
+        <div class="progress-chips" aria-label="두 번째 점별 확인 상황">${nexts.map(n=>{const x=t2.res[k("b",[s,n])]; return `<button type="button" class="pchip ${x?(x.ok?"ok":"bad"):""}" data-second="${n}">${s}→${n} ${x?(x.ok?"✓":"다시"):"…"}</button>`;}).join("")}</div>
+        <p class="note" style="margin:-6px 0 12px">두 번째 점 ${nexts.length}개 중 ${done}개를 맞혔어요.</p>
+        <div class="answer-row"><label for="in-${key}">${s}번 시작 전체 패턴 수</label>
+        <input class="num-in" id="in-${key}" data-in="${key}" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" value="${esc(t2.inputs[key]??"")}">
+        <span class="unit">가지</span>
+        <button type="button" class="btn mint" data-verify="${key}">전체 검증하기</button></div>
+        <div id="err-${key}"></div>
+        ${fbBox(r,`정확해요! ${s}번에서 시작하는 패턴을 빠짐없이 계산했어요. 탭 3에서 다른 시작점과 비교해 보세요.`,"계산한 수가 달라요. 두 번째 점별로 계산한 수를 다시 더해 보거나, 아직 확인하지 않은 가지를 검증해 보세요.")}
+        </div></div>`;
+  }
+  P2.innerHTML=h;
+}
+function verifyKey(key){
+  const [type,rest]=key.split(":"), arr=rest.split("-").map(Number);
+  const v=parseNum(t2.inputs[key]??"");
+  const err=$("#err-"+CSS.escape(key));
+  if(v===null){ if(err) err.innerHTML=`<div class="msg bad">0 이상의 숫자를 입력해 주세요.</div>`; return; }
+  let actual, target;
+  if(type==="c"){ actual=nextPoints(arr).length; target=`${arrow(arr)} 다음 네 번째 점`; }
+  else if(type==="b"){ actual=countFrom(arr); target=`${arrow(arr)} 가지`; }
+  else { actual=countFrom(arr); target=`${arr[0]}번 시작 전체`; }
+  const ok=v===actual;
+  t2.res[key]={ok, mine:v, actual};
+  if(type==="c") unlocked.add(key);   // 세 번째 점 단계는 검증 후 네 번째 점을 공개함
+  addRecord({key, start:arr[0], target, mine:v, actual, ok});
+  renderT2();
+  const focusEl=$("#in-"+CSS.escape(key)); if(focusEl && type!=="b") focusEl.closest(".third,.card").scrollIntoView({block:"nearest"});
+}
+P2.addEventListener("click",e=>{
+  const t=e.target.closest("button"); if(!t) return;
+  if(t.dataset.start){ const n=+t.dataset.start; if(t2.start!==n){ t2.start=n; t2.second=0; } renderT2(); return; }
+  if(t.dataset.second){ t2.second=+t.dataset.second; renderT2(); const s3=P2.querySelectorAll(".step")[2]; if(s3) s3.scrollIntoView({behavior:"smooth",block:"start"}); return; }
+  if(t.dataset.verify){ verifyKey(t.dataset.verify); return; }
+  if(t.dataset.showThird){ t2.showThird[t.dataset.showThird]=true; renderT2(); }
+});
+P2.addEventListener("input",e=>{ const key=e.target.dataset.in; if(key){ t2.inputs[key]=e.target.value.replace(/[^\d]/g,""); if(e.target.value!==t2.inputs[key]) e.target.value=t2.inputs[key]; } });
+P2.addEventListener("keydown",e=>{ if(e.key==="Enter" && e.target.dataset && e.target.dataset.in){ e.preventDefault(); verifyKey(e.target.dataset.in); } });
+renderT2();
+
+/* ===================== 7. 탭 3: 시작점별 결과 비교 ===================== */
+const t3={inputs:{1:"",2:"",5:""}, revealed:false, mine:null, answer:0, err:""};
+const P3=$("#panel-3");
+const SAME={1:"1, 3, 7, 9번 (4곳)",2:"2, 4, 6, 8번 (4곳)",5:"5번 (1곳)"};
+function renderT3(){
+  // 탭 2에서 입력한 전체 수가 있으면 미리 채워 줌
+  [1,2,5].forEach(n=>{ if(!t3.revealed && !t3.inputs[n] && t2.inputs["s:"+n]) t3.inputs[n]=t2.inputs["s:"+n]; });
+  let h=`<p class="lead">1번, 2번, 5번에서 시작하는 패턴 수를 모두 계산했다면 결과를 입력하고 비교해 보세요.</p>
+    <div class="card"><h2>내가 계산한 결과</h2>
+    <div class="inputs3">${[1,2,5].map(n=>`<div class="in3"><label for="t3-${n}">${n}번 시작<small>${PLACE[n]}</small></label>
+      <input class="num-in" id="t3-${n}" data-t3="${n}" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" value="${esc(t3.inputs[n])}"><span class="unit">가지</span></div>`).join("")}</div>
+    <div class="btn-row"><button type="button" class="btn primary" id="t3-verify">최종 결과 검증</button>
+    ${t3.revealed?`<button type="button" class="btn" id="t3-again">다시 입력하기</button>`:""}</div>
+    ${t3.err?`<div class="msg bad">${esc(t3.err)}</div>`:""}</div>`;
+
+  if(t3.revealed){
+    const act={1:countFrom([1]),2:countFrom([2]),5:countFrom([5])};
+    const mine=t3.mine, max=Math.max(...Object.values(act), ...Object.values(mine));
+    const top=Math.ceil(max/50)*50;
+    const allOk=[1,2,5].every(n=>mine[n]===act[n]);
+    h+=`<div class="card"><h2>실제 결과와 비교</h2>
+      <div class="msg big ${allOk?"ok":"bad"}" style="margin:0 0 16px">${allOk?"세 시작점 모두 정확해요! 나뭇가지를 빠짐없이 계산했어요.":"다른 값이 있어요. 표에서 ‘다름’인 시작점을 탭 2에서 다시 나누어 확인해 보세요."}</div>
+      <div class="result-grid">
+        <div class="table-scroll"><table>
+          <thead><tr><th>시작점</th><th>내 계산</th><th>실제</th><th>결과</th></tr></thead>
+          <tbody>${[1,2,5].map(n=>`<tr><td class="big">${n}번<br><small style="font-family:var(--body);font-size:13px;color:var(--muted)">${PLACE[n]}</small></td><td class="big">${mine[n]}</td><td class="big">${act[n]}</td><td class="${mine[n]===act[n]?"yes":"no"}">${mine[n]===act[n]?"일치":"다름"}</td></tr>`).join("")}</tbody>
+        </table></div>
+        <div>
+          <div class="bars" role="img" aria-label="시작점별 패턴 수 막대그래프: 1번 ${act[1]}가지, 2번 ${act[2]}가지, 5번 ${act[5]}가지">
+            ${[1,2,5].map(n=>`<div class="bar-row"><div class="bar-label">${n}번<small>${PLACE[n]}</small></div>
+              <div class="bar-track"><div class="bar b${n}" data-w="${act[n]/top*100}" style="${t3.animate?"":`width:${act[n]/top*100}%`}">${act[n]}</div>
+              ${mine[n]!==act[n]?`<div class="my-mark" style="left:calc(${Math.min(mine[n]/top*100,100)}% - 2px)" title="내 계산 ${mine[n]}"></div>`:""}</div></div>`).join("")}
+          </div>
+          <div class="axis"><span></span><div class="axis-ticks">${Array.from({length:top/50+1},(_,i)=>`<span style="left:${i*50/top*100}%">${i*50}</span>`).join("")}</div></div>
+          ${allOk?"":`<p class="note"><span style="display:inline-block;width:12px;height:12px;background:var(--sun);border-radius:2px;vertical-align:middle"></span> 노란 선은 내가 계산한 값이에요.</p>`}
+        </div>
+      </div>
+      <div class="check-sum">
+        <div>같은 종류의 점: 모서리 ${SAME[1]}, 변의 가운데 ${SAME[2]}, 중앙 ${SAME[5]}</div>
+        <div>전체 패턴 수: ${act[1]}×4 + ${act[2]}×4 + ${act[5]}×1 = <b>${act[1]*4+act[2]*4+act[5]}</b>가지</div>
+        <div>연결 규칙이 없다면: 9×8×7×6 = <b>${FREE}</b>가지 → 규칙 때문에 ${FREE-ALL.length}가지가 줄어들어요.</div>
+        <div class="note" style="margin:4px 0 0">${SELFTEST?"이 값들은 웹앱이 규칙에 맞는 패턴을 하나하나 만들어 보며(DFS) 직접 센 결과예요.":"규칙 검사에서 오류가 발견되었어요."}</div>
+      </div>
+      <div class="question">
+        <p class="q-text">시작점만 알려졌다면 어느 위치에서 시작하는 패턴이 가장 많은 후보를 남길까요?</p>
+        <div class="q-btns">${[1,2,5].map(n=>{ let c=""; if(t3.answer===n) c=n===5?"right":"wrong"; return `<button type="button" class="q-btn ${c}" data-ans="${n}">${n}번 (${PLACE[n]})</button>`;}).join("")}</div>
+        ${t3.answer?(t3.answer===5
+          ?`<div class="msg ok big">맞아요! 정확히 4개의 점을 사용하는 조건에서 5번에서 시작하는 패턴이 ${act[5]}가지로 가장 많기 때문이에요. 시작점이 5번이라는 것이 알려져도 남는 후보가 가장 많아요.</div>
+            <div class="caution"><span aria-hidden="true">⚠️</span><span><b>가능한 패턴의 수가 가장 많다는 것이 실제 스마트폰에서 반드시 가장 안전하다는 뜻은 아닙니다.</b> 사람들이 자주 쓰는 모양, 화면에 남은 손자국처럼 경우의 수 말고도 생각할 것이 있어요.</span></div>`
+          :`<div class="msg bad big">다시 생각해 보세요. 막대그래프에서 가장 긴 막대를 찾아보세요.</div>`):""}
+      </div></div>`;
+  }
+  P3.innerHTML=h;
+  if(t3.animate){ t3.animate=false; requestAnimationFrame(()=>requestAnimationFrame(()=>P3.querySelectorAll(".bar").forEach(b=>b.style.width=b.dataset.w+"%"))); }
+}
+P3.addEventListener("input",e=>{ const n=e.target.dataset.t3; if(n){ t3.inputs[n]=e.target.value.replace(/[^\d]/g,""); if(e.target.value!==t3.inputs[n]) e.target.value=t3.inputs[n]; } });
+P3.addEventListener("click",e=>{
+  const t=e.target.closest("button"); if(!t) return;
+  if(t.id==="t3-verify"){
+    const v={1:parseNum(t3.inputs[1]),2:parseNum(t3.inputs[2]),5:parseNum(t3.inputs[5])};
+    if([1,2,5].some(n=>v[n]===null)){ t3.err="세 칸에 모두 숫자를 입력해 주세요."; renderT3(); return; }
+    t3.err=""; t3.mine=v; t3.revealed=true; t3.answer=0; t3.animate=true;
+    [1,2,5].forEach(n=>{ const a=countFrom([n]); unlocked.add("s:"+n); addRecord({key:"s:"+n, start:n, target:`${n}번 시작 전체 (최종 비교)`, mine:v[n], actual:a, ok:v[n]===a}); });
+    renderT3();
+    const c=P3.querySelectorAll(".card")[1]; if(c) c.scrollIntoView({behavior:"smooth",block:"start"});
+    return;
+  }
+  if(t.id==="t3-again"){ t3.revealed=false; t3.answer=0; renderT3(); return; }
+  if(t.dataset.ans){ t3.answer=+t.dataset.ans; renderT3(); }
+});
+
+renderRecords();
+selectTab(0);
+})();
+</script>
+</body>
+</html>
